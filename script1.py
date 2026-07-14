@@ -218,9 +218,6 @@ print(lecturer_1 < lecturer_2)
 print(lecturer_1 >= lecturer_2)
 print(lecturer_1 <= lecturer_2)
 
-st_avg_course = input("Введите курс для подсчета среднего балла у студентов: ")
-lt_avg_course = input("Введите курс для подсчета среднего балла у лекторов: ")
-
 def students_avg_grade(st_avg_course, student_list: list):
     """A function for determining the average grade point average (GPA) for a given course among students. The course
     is passed in the {st_avg_course variable}. It returns the average grade for the course {total / counter} if students
@@ -263,5 +260,5 @@ def lecturers_avg_grade(lt_avg_course, lecturer_list: list):
     return f"Средний балл по курсу {lt_avg_course} среди лекторов: {total / counter:.2f}" if counter > 0 \
         else "Такого курса нет"
 
-print(students_avg_grade(st_avg_course, ["Филипп Свистопляска", "Жанна Кукуцаполь"]))
-print(lecturers_avg_grade(lt_avg_course, ["Тимур Анвартдинов", "Олеся Хабибулаева"]))
+print(students_avg_grade("Python", ["Филипп Свистопляска", "Жанна Кукуцаполь"]))
+print(lecturers_avg_grade("Python", ["Тимур Анвартдинов", "Олеся Хабибулаева"]))
