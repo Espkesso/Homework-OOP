@@ -10,7 +10,7 @@ class Student:
         self.grades = {}
         self.all_students.append(self)
 
-    def rate_lecturer(self, lecturer, course, grade):       # Method for evaluating lecturers
+    def rate_lecture(self, lecturer, course, grade):       # Method for evaluating lecturers
         if (isinstance(lecturer, Lecturer) and isinstance(grade, int) and course in self.courses_in_progress
                 and course in lecturer.courses_attached and 0 < grade <= 10):
             if course in lecturer.grades:
@@ -26,7 +26,7 @@ class Student:
         for values in self.grades.values():
             total_summ += sum(values)
             total_length += len(values)
-        return f"{total_summ / total_length:.2f}" if total_length > 0 else 0
+        return float(f"{total_summ / total_length:.2f}") if total_length > 0 else 0
 
     # We define magical methods for comparing students by grade point average.
     def __eq__(self, other):
@@ -73,7 +73,7 @@ class Lecturer(Mentor):
         for values in self.grades.values():
             total_summ += sum(values)
             total_length += len(values)
-        return total_summ / total_length if total_length > 0 else 0
+        return float(f"{total_summ / total_length:.2f}") if total_length > 0 else 0
 
     # We define magical methods for comparing lecturers by grade point average.
     def __eq__(self, other):
@@ -163,22 +163,22 @@ reviewer_4.rate_student(student_2, "C++", 7)
 reviewer_4.rate_student(student_3, "C++", 10)
 reviewer_4.rate_student(student_4, "Python", 5)
 
-student_1.rate_lecturer(lecturer_1, "Python", 10)
-student_1.rate_lecturer(lecturer_2, "Scala", 8)
-student_1.rate_lecturer(lecturer_3, "Kotlin", 7)
-student_1.rate_lecturer(lecturer_4, "C#", 10)
-student_2.rate_lecturer(lecturer_1, "C++", 7)
-student_2.rate_lecturer(lecturer_2, "Java", 10)
-student_2.rate_lecturer(lecturer_3, "Python", 9)
-student_2.rate_lecturer(lecturer_4, "C++", 8)
-student_3.rate_lecturer(lecturer_1, "C++", 9)
-student_3.rate_lecturer(lecturer_2, "Kotlin", 6)
-student_3.rate_lecturer(lecturer_3, "Scala", 10)
-student_3.rate_lecturer(lecturer_4, "Java", 7)
-student_4.rate_lecturer(lecturer_1, "Python", 8)
-student_4.rate_lecturer(lecturer_2, "Java", 6)
-student_4.rate_lecturer(lecturer_3, "Python", 10)
-student_4.rate_lecturer(lecturer_4, "C#", 8)
+student_1.rate_lecture(lecturer_1, "Python", 10)
+student_1.rate_lecture(lecturer_2, "Scala", 8)
+student_1.rate_lecture(lecturer_3, "Kotlin", 7)
+student_1.rate_lecture(lecturer_4, "C#", 10)
+student_2.rate_lecture(lecturer_1, "C++", 7)
+student_2.rate_lecture(lecturer_2, "Java", 10)
+student_2.rate_lecture(lecturer_3, "Python", 9)
+student_2.rate_lecture(lecturer_4, "C++", 8)
+student_3.rate_lecture(lecturer_1, "C++", 9)
+student_3.rate_lecture(lecturer_2, "Kotlin", 6)
+student_3.rate_lecture(lecturer_3, "Scala", 10)
+student_3.rate_lecture(lecturer_4, "Java", 7)
+student_4.rate_lecture(lecturer_1, "Python", 8)
+student_4.rate_lecture(lecturer_2, "Java", 6)
+student_4.rate_lecture(lecturer_3, "Python", 10)
+student_4.rate_lecture(lecturer_4, "C#", 8)
 
 lecturer = Lecturer('Иван', 'Иванов')
 reviewer = Reviewer('Пётр', 'Петров')
@@ -193,10 +193,10 @@ student.courses_in_progress += ['Python', 'Java']
 lecturer.courses_attached += ['Python', 'C++']
 reviewer.courses_attached += ['Python', 'C++']
 
-print(student.rate_lecturer(lecturer, 'Python', 7))  # None
-print(student.rate_lecturer(lecturer, 'Java', 8))  # Ошибка
-print(student.rate_lecturer(lecturer, 'С++', 8))  # Ошибка
-print(student.rate_lecturer(reviewer, 'Python', 6))  # Ошибка
+print(student.rate_lecture(lecturer, 'Python', 7))  # None
+print(student.rate_lecture(lecturer, 'Java', 8))  # Ошибка
+print(student.rate_lecture(lecturer, 'С++', 8))  # Ошибка
+print(student.rate_lecture(reviewer, 'Python', 6))  # Ошибка
 print(lecturer.grades)  # {'Python': [7]}
 print()
 print(student_1)
@@ -221,41 +221,47 @@ print(lecturer_1 <= lecturer_2)
 st_avg_course = input("Введите курс для подсчета среднего балла у студентов: ")
 lt_avg_course = input("Введите курс для подсчета среднего балла у лекторов: ")
 
-def students_avg_grade(st_avg_course):
+def students_avg_grade(st_avg_course, student_list: list):
     """A function for determining the average grade point average (GPA) for a given course among students. The course
     is passed in the {st_avg_course variable}. It returns the average grade for the course {total / counter} if students
     have the course, or the text "Такого курса нет" if the course does not exist.
     :param st_avg_course: the course for which the average grade among all students needs to be determined
-    :return: total / counter: average course grade among all students
+           student_list: the list of students whose GPA needs to be calculated
+    :return: total / counter: average course grade among selected students
 
     """
     total = 0
     counter = 0
-    for students in Student.all_students:
-        for course, grade in students.grades.items():
-            if st_avg_course == course:
-                total += sum(grade) / len(grade)
-                counter += 1
+    for student in student_list:
+        for st in Student.all_students:
+            if student == (st.name + " " + st.surname):
+                for course, grade in st.grades.items():
+                    if st_avg_course == course:
+                        total += sum(grade) / len(grade)
+                        counter += 1
     return f"Средний балл по курсу {st_avg_course} среди студентов: {total / counter:.2f}" if counter > 0 \
         else "Такого курса нет"
 
-def lecturers_avg_grade(lt_avg_course):
+def lecturers_avg_grade(lt_avg_course, lecturer_list: list):
     """A function for determining the average grade point average (GPA) for a given course lecturers. The course
     is passed in the {lt_avg_course variable}. It returns the average grade for the course {total / counter} if
     lecturers have the course, or the text "Такого курса нет" if the course does not exist.
     :param lt_avg_course: the course for which the average grade among all lecturers needs to be determined
-    :return: total / counter: average course grade among all lecturers
+           lecturer_list: the list of lecturers whose GPA needs to be calculated
+    :return: total / counter: average course grade among selected lecturers
 
     """
     total = 0
     counter = 0
-    for lecturers in Lecturer.all_lecturers:
-        for course, grade in lecturers.grades.items():
-            if lt_avg_course == course:
-                total += sum(grade) / len(grade)
-                counter += 1
+    for lecturer in lecturer_list:
+        for lt in Lecturer.all_lecturers:
+            if lecturer == (lt.name + " " + lt.surname):
+                for course, grade in lt.grades.items():
+                    if lt_avg_course == course:
+                        total += sum(grade) / len(grade)
+                        counter += 1
     return f"Средний балл по курсу {lt_avg_course} среди лекторов: {total / counter:.2f}" if counter > 0 \
         else "Такого курса нет"
 
-print(students_avg_grade(st_avg_course))
-print(lecturers_avg_grade(lt_avg_course))
+print(students_avg_grade(st_avg_course, ["Филипп Свистопляска", "Жанна Кукуцаполь"]))
+print(lecturers_avg_grade(lt_avg_course, ["Тимур Анвартдинов", "Олеся Хабибулаева"]))
