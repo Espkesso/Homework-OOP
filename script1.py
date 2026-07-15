@@ -1,6 +1,4 @@
 class Student:
-    all_students = []
-
     def __init__(self, name, surname, gender):
         self.name = name
         self.surname = surname
@@ -8,7 +6,6 @@ class Student:
         self.finished_courses = []
         self.courses_in_progress = []
         self.grades = {}
-        self.all_students.append(self)
 
     def rate_lecture(self, lecturer, course, grade):       # Method for evaluating lecturers
         if (isinstance(lecturer, Lecturer) and isinstance(grade, int) and course in self.courses_in_progress
@@ -60,12 +57,10 @@ class Mentor:
 
 
 class Lecturer(Mentor):
-    all_lecturers = []
 
     def __init__(self, name, surname):
         super().__init__(name, surname)
         self.grades = {}
-        self.all_lecturers.append(self)
 
     def mid_rate(self):        # Method for calculating a lecturer's grade point average
         total_summ = 0
@@ -230,12 +225,10 @@ def students_avg_grade(st_avg_course, student_list: list):
     total = 0
     counter = 0
     for student in student_list:
-        for st in Student.all_students:
-            if student == (st.name + " " + st.surname):
-                for course, grade in st.grades.items():
-                    if st_avg_course == course:
-                        total += sum(grade) / len(grade)
-                        counter += 1
+        for course, grade in student.grades.items():
+            if st_avg_course == course:
+                total += sum(grade) / len(grade)
+                counter += 1
     return f"Средний балл по курсу {st_avg_course} среди студентов: {total / counter:.2f}" if counter > 0 \
         else "Такого курса нет"
 
@@ -251,14 +244,12 @@ def lecturers_avg_grade(lt_avg_course, lecturer_list: list):
     total = 0
     counter = 0
     for lecturer in lecturer_list:
-        for lt in Lecturer.all_lecturers:
-            if lecturer == (lt.name + " " + lt.surname):
-                for course, grade in lt.grades.items():
-                    if lt_avg_course == course:
-                        total += sum(grade) / len(grade)
-                        counter += 1
+        for course, grade in lecturer.grades.items():
+            if lt_avg_course == course:
+                total += sum(grade) / len(grade)
+                counter += 1
     return f"Средний балл по курсу {lt_avg_course} среди лекторов: {total / counter:.2f}" if counter > 0 \
         else "Такого курса нет"
 
-print(students_avg_grade("Python", ["Филипп Свистопляска", "Жанна Кукуцаполь"]))
-print(lecturers_avg_grade("Python", ["Тимур Анвартдинов", "Олеся Хабибулаева"]))
+print(students_avg_grade("Python", [student_1, student_2, student_3]))
+print(lecturers_avg_grade("Python", [lecturer_1, lecturer_2, lecturer_3]))
