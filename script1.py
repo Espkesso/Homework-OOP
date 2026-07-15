@@ -213,7 +213,7 @@ print(lecturer_1 < lecturer_2)
 print(lecturer_1 >= lecturer_2)
 print(lecturer_1 <= lecturer_2)
 
-def students_avg_grade(st_avg_course, student_list: list):
+def students_avg_grade(st_avg_course, student_list: list) -> float:
     """A function for determining the average grade point average (GPA) for a given course among students. The course
     is passed in the {st_avg_course variable}. It returns the average grade for the course {total / counter} if students
     have the course, or the text "Такого курса нет" if the course does not exist.
@@ -224,15 +224,15 @@ def students_avg_grade(st_avg_course, student_list: list):
     """
     total = 0
     counter = 0
+    print(f"Средний балл по курсу {st_avg_course} среди студентов: ", end="")
     for student in student_list:
         for course, grade in student.grades.items():
             if st_avg_course == course:
                 total += sum(grade) / len(grade)
                 counter += 1
-    return f"Средний балл по курсу {st_avg_course} среди студентов: {total / counter:.2f}" if counter > 0 \
-        else "Такого курса нет"
+    return (total / counter) if counter > 0 else 0
 
-def lecturers_avg_grade(lt_avg_course, lecturer_list: list):
+def lecturers_avg_grade(lt_avg_course, lecturer_list: list) -> float:
     """A function for determining the average grade point average (GPA) for a given course lecturers. The course
     is passed in the {lt_avg_course variable}. It returns the average grade for the course {total / counter} if
     lecturers have the course, or the text "Такого курса нет" if the course does not exist.
@@ -243,13 +243,19 @@ def lecturers_avg_grade(lt_avg_course, lecturer_list: list):
     """
     total = 0
     counter = 0
+    print(f"Средний балл по курсу {lt_avg_course} среди лекторов: ", end="")
     for lecturer in lecturer_list:
         for course, grade in lecturer.grades.items():
             if lt_avg_course == course:
                 total += sum(grade) / len(grade)
                 counter += 1
-    return f"Средний балл по курсу {lt_avg_course} среди лекторов: {total / counter:.2f}" if counter > 0 \
-        else "Такого курса нет"
+    return (total / counter) if counter > 0 else 0
 
 print(students_avg_grade("Python", [student_1, student_2, student_3]))
+print(type(students_avg_grade("Python", [student_1, student_2, student_3])))
 print(lecturers_avg_grade("Python", [lecturer_1, lecturer_2, lecturer_3]))
+print(type(lecturers_avg_grade("Python", [lecturer_1, lecturer_2, lecturer_3])))
+print(students_avg_grade("Ruby", [student_1, student_2, student_3]))
+print(type(students_avg_grade("Ruby", [student_1, student_2, student_3])))
+print(lecturers_avg_grade("Ruby", [lecturer_1, lecturer_2, lecturer_3]))
+print(type(lecturers_avg_grade("Ruby", [lecturer_1, lecturer_2, lecturer_3])))
